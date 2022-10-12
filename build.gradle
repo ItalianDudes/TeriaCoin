@@ -23,7 +23,7 @@ dependencies {
 
 shadowJar {
     manifest {
-        attributes "Main-Class" : "com.italianDudes.teriacoin.TeriaCoin"
+        attributes "Main-Class" : "com.italiandudes.teriacoin.TeriaCoin"
     }
     archiveFileName = getRootDir().getName()+"-"+archiveVersion.get()+".jar"
 }

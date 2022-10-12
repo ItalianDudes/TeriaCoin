@@ -1,7 +1,7 @@
 package com.italiandudes.teriacoin.common;
 
 import com.italianDudes.idl.common.Logger;
-import com.italiandudes.teriacoin.TeriaCoin.Defs;
+import com.italiandudes.teriacoin.server.TeriaCoinServer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class Config {
         return false;
     }
     public void setDefault(){
-        configMap.add(new ConfigData(Defs.KEY_PORT, Defs.VALUE_PORT));
+        configMap.add(new ConfigData(TeriaCoinServer.ServerDefs.KEY_PORT, TeriaCoinServer.ServerDefs.VALUE_PORT));
     }
     public void dumpConfigs(){
         configMap.clear();

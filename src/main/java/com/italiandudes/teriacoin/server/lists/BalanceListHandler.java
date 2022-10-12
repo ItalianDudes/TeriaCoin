@@ -1,6 +1,7 @@
 package com.italiandudes.teriacoin.server.lists;
 
 import com.italianDudes.idl.common.Credential;
+import com.italianDudes.idl.common.Logger;
 import com.italiandudes.teriacoin.common.Balance;
 import com.italiandudes.teriacoin.server.TeriaCoinServer;
 
@@ -30,6 +31,12 @@ public final class BalanceListHandler {
     }
     public static void readRegisteredBalances(){
 
+        File serverDir = new File(TeriaCoinServer.ServerDefs.SERVER_DIRECTORY_PATH);
+        if(!serverDir.exists() || !serverDir.isDirectory()){
+            //noinspection ResultOfMethodCallIgnored
+            serverDir.mkdirs();
+        }
+
         File registeredBalancesFile = new File(TeriaCoinServer.ServerDefs.SERVER_REGISTERED_BALANCES_FILEPATH);
 
         if(registeredBalancesFile.exists() && registeredBalancesFile.isFile()) {
@@ -39,7 +46,9 @@ public final class BalanceListHandler {
                 inFile = new Scanner(registeredBalancesFile);
             }catch (FileNotFoundException ioException){
                 inFile = null;
-                System.err.println("Cannot read registered balances!");
+                Logger.log("Cannot read registered balances!");
+                Logger.log(ioException);
+                Logger.close();
                 System.exit(TeriaCoinServer.ServerDefs.CANNOT_READ_SERVER_REGISTERED_BALANCES_FILE);
             }
 
@@ -62,12 +71,25 @@ public final class BalanceListHandler {
             inFile.close();
 
         }else{
+
+            try {
+                //noinspection ResultOfMethodCallIgnored
+                registeredBalancesFile.createNewFile();
+            }catch (IOException e){
+                Logger.log("Cannot create registered user list file!");
+                Logger.log(e);
+                Logger.close();
+                System.exit(TeriaCoinServer.ServerDefs.CANNOT_CREATE_SERVER_REGISTERED_BALANCES_FILE);
+            }
+
             FileWriter outFile;
             try {
                 outFile = new FileWriter(registeredBalancesFile);
             }catch (IOException ioException){
                 outFile = null;
-                System.err.println("Cannot write registered balances file!");
+                Logger.log("Cannot write registered balances file!");
+                Logger.log(ioException);
+                Logger.close();
                 System.exit(TeriaCoinServer.ServerDefs.CANNOT_WRITE_SERVER_REGISTERED_BALANCES_FILE);
             }
             try {
@@ -78,7 +100,9 @@ public final class BalanceListHandler {
                 try {
                     outFile.close();
                 }catch (IOException closeIOException){
-                    System.err.println("Error during writing registered balances file!");
+                    Logger.log("Error during writing registered balances file!");
+                    Logger.log(closeIOException);
+                    Logger.close();
                     System.exit(TeriaCoinServer.ServerDefs.CANNOT_CLOSE_SERVER_REGISTERED_BALANCES_FILE);
                 }
                 System.exit(TeriaCoinServer.ServerDefs.CANNOT_WRITE_SERVER_REGISTERED_BALANCES_FILE);
@@ -86,7 +110,9 @@ public final class BalanceListHandler {
             try {
                 outFile.close();
             }catch (IOException closeIOException){
-                System.err.println("Cannot close registered balances file!");
+                Logger.log("Cannot close registered balances file!");
+                Logger.log(closeIOException);
+                Logger.close();
                 System.exit(TeriaCoinServer.ServerDefs.CANNOT_CLOSE_SERVER_REGISTERED_BALANCES_FILE);
             }
         }
@@ -94,14 +120,33 @@ public final class BalanceListHandler {
     }
     public static void writeRegisteredBalances(){
 
+        File serverDir = new File(TeriaCoinServer.ServerDefs.SERVER_DIRECTORY_PATH);
+        if(!serverDir.exists() || !serverDir.isDirectory()){
+            //noinspection ResultOfMethodCallIgnored
+            serverDir.mkdirs();
+        }
+
         File registeredBalancesFile = new File(TeriaCoinServer.ServerDefs.SERVER_REGISTERED_BALANCES_FILEPATH);
+        if(!registeredBalancesFile.exists() || !registeredBalancesFile.isFile()){
+            try {
+                //noinspection ResultOfMethodCallIgnored
+                registeredBalancesFile.createNewFile();
+            }catch (IOException e){
+                Logger.log("Cannot create registered user list file!");
+                Logger.log(e);
+                Logger.close();
+                System.exit(TeriaCoinServer.ServerDefs.CANNOT_CREATE_SERVER_REGISTERED_BALANCES_FILE);
+            }
+        }
 
         FileWriter outFile;
         try {
             outFile = new FileWriter(registeredBalancesFile);
         }catch (IOException ioException){
             outFile = null;
-            System.err.println("Cannot write registered user list file!");
+            Logger.log("Cannot write registered user list file!");
+            Logger.log(ioException);
+            Logger.close();
             System.exit(TeriaCoinServer.ServerDefs.CANNOT_WRITE_SERVER_REGISTERED_BALANCES_FILE);
         }
         try {
@@ -114,13 +159,17 @@ public final class BalanceListHandler {
             }
             outFile.flush();
         }catch (IOException ioException){
-            System.err.println("Error during writing registered balances file!");
+            Logger.log("Error during writing registered balances file!");
+            Logger.log(ioException);
             try {
                 outFile.close();
             }catch (IOException closeIOException){
-                System.err.println("Error during writing registered balances file!");
+                Logger.log("Error during writing registered balances file!");
+                Logger.log(closeIOException);
+                Logger.close();
                 System.exit(TeriaCoinServer.ServerDefs.CANNOT_CLOSE_SERVER_REGISTERED_BALANCES_FILE);
             }
+            Logger.close();
             System.exit(TeriaCoinServer.ServerDefs.CANNOT_WRITE_SERVER_REGISTERED_BALANCES_FILE);
         }
 
@@ -133,6 +182,7 @@ public final class BalanceListHandler {
         balanceMap.remove(credential);
         return true;
     }
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean registerBalance(Credential credential){
         Balance balanceExist = balanceMap.get(credential);
         if(balanceExist != null){
@@ -149,6 +199,7 @@ public final class BalanceListHandler {
         balanceMap.put(credential, balance);
         return true;
     }
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean registerBalance(Credential credential, double balance){
         Balance balanceExist = balanceMap.get(credential);
         if(balanceExist != null){
@@ -156,6 +207,15 @@ public final class BalanceListHandler {
         }
         balanceMap.put(credential, new Balance(balance));
         return true;
+    }
+    public static Credential getCredentialByUser(String user){
+        Set<Credential> credentials = balanceMap.keySet();
+        for(Credential credential : credentials){
+            if(credential.getUsername().equals(user)){
+                return credential;
+            }
+        }
+        return null;
     }
     public static boolean contains(Credential credential){
         return balanceMap.get(credential)!=null;

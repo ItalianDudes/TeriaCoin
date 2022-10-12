@@ -137,8 +137,8 @@ public final class ServerUtils {
                         break;
 
                     default:
-                        Logger.log("Invalid keyboard input: " + Arrays.toString(parsedCommand), new InfoFlags(true, false));
-                        System.err.println("Type \""+Defs.COMMAND_HELP+"\" for the command list");
+                        Logger.log("Invalid keyboard input: " + Arrays.toString(parsedCommand));
+                        Logger.log("Type \""+Defs.COMMAND_HELP+"\" for the command list");
                         break;
 
                 }

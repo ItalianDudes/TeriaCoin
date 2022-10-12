@@ -34,6 +34,7 @@ public class Authenticator implements Runnable {
                 String username = Serializer.receiveString(tempPeer);
                 String password = Serializer.receiveString(tempPeer);
                 Credential credential = new Credential(username, password, false);
+                tempPeer = new Peer(connection, credential);
 
                 boolean disconnect = false;
 
@@ -43,6 +44,7 @@ public class Authenticator implements Runnable {
                         if(BalanceListHandler.contains(credential)) {
                             Peer authenticatedPeer = new Peer(connection, credential);
                             if (PeerList.addPeer(authenticatedPeer)) {
+                                Logger.log(authenticatedPeer.peerConnectionToString()+" Logged in!");
                                 Serializer.sendInt(authenticatedPeer, TeriaProtocols.OK);
                                 new Thread(new PeerHandler(authenticatedPeer)).start();
                             } else {
@@ -59,9 +61,11 @@ public class Authenticator implements Runnable {
 
                     case TeriaProtocols.TERIA_REGISTER:
                         if(BalanceListHandler.contains(credential)){
+                            Logger.log("["+tempPeer.peerConnectionToString()+"] Username \""+tempPeer.getCredential().getUsername()+"\" already exist!");
                             Serializer.sendInt(tempPeer, TeriaProtocols.TeriaRegisterCodes.ALREADY_EXIST);
                         }else{
                             //TODO: Test vari su username
+                            Logger.log("["+tempPeer.getPeerSocket().getInetAddress().getHostAddress()+":"+tempPeer.getPeerSocket().getPort()+"] User \""+tempPeer.getCredential().getUsername()+"\" registered! Closing connection");
                             Serializer.sendInt(tempPeer, TeriaProtocols.OK);
                             BalanceListHandler.registerBalance(tempPeer.getCredential());
                         }

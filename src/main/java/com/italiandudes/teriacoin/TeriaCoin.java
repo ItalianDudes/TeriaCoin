@@ -44,15 +44,6 @@ public class TeriaCoin {
         public static final String COMMAND_CHECK_CONDITION_CONNECTED = "connected";
         public static final String[] COMMAND_CHECK_CONDITION_KEY_COLLECTION = {COMMAND_CHECK_CONDITION_CONNECTED};
 
-        public static final String BUILT_IN_PATH_RESOURCES = "server/";
-
-        //Config
-            public static final String SERVER_CONFIG_FILEPATH = BUILT_IN_PATH_RESOURCES+"config.cfg";
-            //Keys
-            public static final String KEY_PORT = "port";
-            //Values
-            public static final String VALUE_PORT = "25000";
-
         //Protocols
         public static final class TeriaProtocols {
 
@@ -75,6 +66,13 @@ public class TeriaCoin {
             }
             public static final String TERIA_LOGOUT = "LOGOUT";
             public static final String TERIA_BALANCE = "BALANCE";
+            public static final String TERIA_SEND = "SEND";
+
+            public static final class TeriaSendCodes {
+                public static final int INSUFFICIENT_TC_AVAILABLE = -1;
+                public static final int USERNAME_DOES_NOT_EXIST = -2;
+                public static final int INVALID_TC_AMOUNT = -3;
+            }
 
         }
 

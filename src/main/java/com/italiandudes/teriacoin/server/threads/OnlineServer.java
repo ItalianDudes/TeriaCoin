@@ -58,8 +58,10 @@ public class OnlineServer implements Runnable {
                         Logger.log(ioException);
                 }
 
-                if(incomingConnection!=null && !incomingConnection.isClosed())
+                if(incomingConnection!=null && !incomingConnection.isClosed()) {
+                    Logger.log("Accepted connection to "+incomingConnection.getInetAddress().getHostAddress()+incomingConnection.getPort());
                     new Thread(new Authenticator(incomingConnection)).start();
+                }
 
             }
 
