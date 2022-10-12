@@ -24,7 +24,7 @@ public final class BalanceListHandler {
     }
 
     //Methods
-    public static void initList(){
+    public static void init(){
         balanceMap = new HashMap<>();
         readRegisteredBalances();
     }
@@ -92,7 +92,7 @@ public final class BalanceListHandler {
         }
 
     }
-    public static void writeRegisteredUsers(){
+    public static void writeRegisteredBalances(){
 
         File registeredBalancesFile = new File(TeriaCoinServer.ServerDefs.SERVER_REGISTERED_BALANCES_FILEPATH);
 
