@@ -1,0 +1,36 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'java'
+}
+
+group 'com.italianDudes'
+version '1.0R'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.italianDudes:idl:1.0'
+}
+
+shadowJar {
+    manifest {
+        attributes "Main-Class" : "com.italianDudes.teriacoin.TeriaCoin"
+    }
+    archiveFileName = getRootDir().getName()+"-"+archiveVersion.get()+".jar"
+}
+
+task buildAndRun(type: Exec) {
+    dependsOn shadowJar
+    group = "Execution"
+    description = "Run the mainClass from the output jar in classpath with ExecTask"
+    commandLine "java", "-jar", jar.archiveFile.get()
+}
