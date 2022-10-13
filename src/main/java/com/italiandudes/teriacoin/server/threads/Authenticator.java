@@ -4,10 +4,10 @@ import com.italianDudes.idl.common.Credential;
 import com.italianDudes.idl.common.Logger;
 import com.italianDudes.idl.common.Peer;
 import com.italianDudes.idl.common.Serializer;
+import com.italiandudes.teriacoin.TeriaCoin.Defs.TeriaProtocols;
 import com.italiandudes.teriacoin.common.exception.socket.InvalidProtocolException;
 import com.italiandudes.teriacoin.server.lists.BalanceListHandler;
 import com.italiandudes.teriacoin.server.lists.PeerList;
-import com.italiandudes.teriacoin.TeriaCoin.Defs.TeriaProtocols;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -43,6 +43,8 @@ public class TeriaCoin {
         public static final String COMMAND_CHECK_CONDITION = "check";
         public static final String COMMAND_CHECK_CONDITION_CONNECTED = "connected";
         public static final String[] COMMAND_CHECK_CONDITION_KEY_COLLECTION = {COMMAND_CHECK_CONDITION_CONNECTED};
+        public static final String COMMAND_ADD_ITEM = "additem";
+        public static final String COMMAND_REMOVE_ITEM = "removeitem";
 
         //Protocols
         public static final class TeriaProtocols {
@@ -73,6 +75,22 @@ public class TeriaCoin {
                 public static final int USERNAME_DOES_NOT_EXIST = -2;
                 public static final int INVALID_TC_AMOUNT = -3;
             }
+
+            public static final String TERIA_EXCHANGE_TC = "EXCHANGE_TC";
+
+            public static final class TeriaExchangeTCCodes {
+                public static final int INSUFFICIENT_TC_AVAILABLE = -1;
+                public static final int ITEM_INDEX_NOT_FOUND = -2;
+            }
+
+            public static final String TERIA_EXCHANGE_ITEM = "EXCHANGE_ITEM";
+
+            public static final class TeriaExchangeItemCodes {
+                public static final int MISSING_REQUESTED_ITEM_AMOUT = -1;
+                public static final int ITEM_INDEX_NOT_FOUND = -2;
+            }
+
+            public static final String TERIA_EXCHANGE_LIST = "EXCHANGE_LIST";
 
         }
 

@@ -5,6 +5,7 @@ import com.italianDudes.idl.common.Logger;
 import com.italianDudes.idl.common.State;
 import com.italiandudes.teriacoin.common.Config;
 import com.italiandudes.teriacoin.server.lists.BalanceListHandler;
+import com.italiandudes.teriacoin.server.lists.ItemIndexListHandler;
 import com.italiandudes.teriacoin.server.threads.OnlineServer;
 
 import java.util.Scanner;
@@ -26,6 +27,7 @@ public final class TeriaCoinServer {
         }
 
         BalanceListHandler.init();
+        ItemIndexListHandler.init();
 
         Logger.log("[SERVER START ROUTINE] Server started successfully at port: "+serverConfig.getValue(ServerDefs.KEY_PORT));
 
@@ -45,6 +47,7 @@ public final class TeriaCoinServer {
         onlineServerThread.interrupt();
 
         BalanceListHandler.writeRegisteredBalances();
+        ItemIndexListHandler.writeItemIndexMap();
 
         if(serverConfig.writeConfigs(ServerDefs.SERVER_CONFIG_FILEPATH)){
             Logger.log("Configs saved successfully!");
@@ -62,6 +65,7 @@ public final class TeriaCoinServer {
         //PATHS
         public static final String SERVER_DIRECTORY_PATH = "server/";
         public static final String SERVER_REGISTERED_BALANCES_FILEPATH = SERVER_DIRECTORY_PATH+"registeredBalances.txt";
+        public static final String SERVER_ITEM_INDEX_FILEPATH = SERVER_DIRECTORY_PATH+"itemIndexes.txt";
         //Config
             public static final String SERVER_CONFIG_FILEPATH = SERVER_DIRECTORY_PATH+"config.cfg";
             //Keys
@@ -74,6 +78,10 @@ public final class TeriaCoinServer {
         public static final int CANNOT_WRITE_SERVER_REGISTERED_BALANCES_FILE = 4516;
         public static final int CANNOT_CLOSE_SERVER_REGISTERED_BALANCES_FILE = 4515;
         public static final int CANNOT_CREATE_SERVER_REGISTERED_BALANCES_FILE = 4513;
+        public static final int CANNOT_READ_SERVER_ITEM_INDEX_FILE = 4615;
+        public static final int CANNOT_CREATE_SERVER_ITEM_INDEX_FILE = 4616;
+        public static final int CANNOT_WRITE_SERVER_ITEM_INDEX_FILE = 4617;
+        public static final int CANNOT_CLOSE_SERVER_ITEM_INDEX_FILE = 4618;
     }
 
 }

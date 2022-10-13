@@ -4,6 +4,8 @@ import com.italianDudes.idl.common.InfoFlags;
 import com.italianDudes.idl.common.Logger;
 import com.italianDudes.idl.common.StringHandler;
 import com.italiandudes.teriacoin.TeriaCoin.Defs;
+import com.italiandudes.teriacoin.common.ItemDescriptor;
+import com.italiandudes.teriacoin.server.lists.ItemIndexListHandler;
 import com.italiandudes.teriacoin.server.lists.PeerList;
 
 import java.util.Arrays;
@@ -132,6 +134,38 @@ public final class ServerUtils {
                         }
                         break;
 
+                    case Defs.COMMAND_ADD_ITEM:
+                        if(parsedCommand.length<5){
+                            printErrorMessage(parsedCommand[0]);
+                        }else{
+                            int index = Integer.parseInt(parsedCommand[1]);
+                            String itemID = parsedCommand[2];
+                            String itemName = parsedCommand[3];
+                            double itemValue = Double.parseDouble(parsedCommand[4]);
+                            if(ItemIndexListHandler.contains(index)){
+                                Logger.log("Can't add item: index already registered");
+                            }else{
+                                ItemIndexListHandler.registerItem(index, new ItemDescriptor(itemID, itemName, itemValue));
+                                Logger.log("Item registered successfully!");
+                            }
+                        }
+                        break;
+
+                    case Defs.COMMAND_REMOVE_ITEM:
+                        if(parsedCommand.length<2){
+                            printErrorMessage(parsedCommand[0]);
+                        }else{
+                            for(int i=1;i<parsedCommand.length;i++){
+                                if(ItemIndexListHandler.contains(Integer.parseInt(parsedCommand[i]))){
+                                    ItemIndexListHandler.unregisterItem(Integer.parseInt(parsedCommand[i]));
+                                    Logger.log("Unregistered "+parsedCommand[i]);
+                                }else{
+                                    Logger.log("Index "+parsedCommand[i]+" it's not registered");
+                                }
+                            }
+                        }
+                        break;
+
                     case Defs.COMMAND_HELP:
                         showHelpMessage();
                         break;
@@ -182,6 +216,12 @@ public final class ServerUtils {
                     System.out.println("\t\t\t-"+key);
                 }
                 System.out.println("\t\tSyntax: "+Defs.COMMAND_CONFIG+" <subcommand> <key> [newValue]");
+        System.out.println("\t-"+Defs.COMMAND_ADD_ITEM +":");
+            System.out.println("\t\t-Register a new Item");
+            System.out.println("\t\tSyntax: "+Defs.COMMAND_ADD_ITEM +" <index> <itemID> <itemName> <itemValue>");
+        System.out.println("\t-"+Defs.COMMAND_REMOVE_ITEM +":");
+            System.out.println("\t\t-Unregister an existing Item providing the index");
+            System.out.println("\t\tSyntax: "+Defs.COMMAND_REMOVE_ITEM +" <index> [index1] ... [indexN]");
 
     }
 

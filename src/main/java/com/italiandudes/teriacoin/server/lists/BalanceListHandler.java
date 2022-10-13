@@ -208,6 +208,9 @@ public final class BalanceListHandler {
         balanceMap.put(credential, new Balance(balance));
         return true;
     }
+    public static Set<Credential> getKeySet(){
+        return balanceMap.keySet();
+    }
     public static Credential getCredentialByUser(String user){
         Set<Credential> credentials = balanceMap.keySet();
         for(Credential credential : credentials){
