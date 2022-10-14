@@ -44,24 +44,24 @@ public class Authenticator implements Runnable {
                         if(BalanceListHandler.contains(credential)) {
                             Peer authenticatedPeer = new Peer(connection, credential);
                             if (PeerList.addPeer(authenticatedPeer)) {
-                                Logger.log(authenticatedPeer.peerConnectionToString()+" Logged in!");
+                                Logger.log("["+authenticatedPeer.getPeerSocket().getInetAddress().getHostAddress()+":"+authenticatedPeer.getPeerSocket().getPort()+"] Logged in with \""+ authenticatedPeer.getCredential().getUsername() +"\"!");
                                 Serializer.sendInt(authenticatedPeer, TeriaProtocols.OK);
                                 new Thread(new PeerHandler(authenticatedPeer)).start();
                             } else {
                                 Serializer.sendInt(tempPeer, TeriaProtocols.TeriaLoginCodes.ALREADY_LOGGED_IN);
-                                Logger.log("User \"" + authenticatedPeer.getCredential().getUsername() + "\" already connected!");
+                                Logger.log("["+authenticatedPeer.getPeerSocket().getInetAddress().getHostAddress()+":"+authenticatedPeer.getPeerSocket().getPort()+"] User \"" + authenticatedPeer.getCredential().getUsername() + "\" already connected!");
                                 disconnect = true;
                             }
                         }else{
                             Serializer.sendInt(tempPeer, TeriaProtocols.TeriaLoginCodes.INVALID_CREDENTIALS);
-                            Logger.log("User \"" + credential.getUsername() + "\" isn't registered or combination username/password is wrong!");
+                            Logger.log("["+tempPeer.getPeerSocket().getInetAddress().getHostAddress()+":"+tempPeer.getPeerSocket().getPort()+"] User \"" + credential.getUsername() + "\" isn't registered or combination username/password is wrong!");
                             disconnect = true;
                         }
                         break;
 
                     case TeriaProtocols.TERIA_REGISTER:
                         if(BalanceListHandler.contains(credential)){
-                            Logger.log("["+tempPeer.peerConnectionToString()+"] Username \""+tempPeer.getCredential().getUsername()+"\" already exist!");
+                            Logger.log("["+"["+tempPeer.getPeerSocket().getInetAddress().getHostAddress()+":"+tempPeer.getPeerSocket().getPort()+"] Username \""+tempPeer.getCredential().getUsername()+"\" already exist!");
                             Serializer.sendInt(tempPeer, TeriaProtocols.TeriaRegisterCodes.ALREADY_EXIST);
                         }else{
                             //TODO: Test vari su username
@@ -76,7 +76,7 @@ public class Authenticator implements Runnable {
                         try {
                             Serializer.sendInt(tempPeer, TeriaProtocols.INVALID_PROTOCOL);
                         }catch (Exception ignored){}
-                        throw new InvalidProtocolException("Protocol not respected!");
+                        throw new InvalidProtocolException("["+ tempPeer.getPeerSocket().getInetAddress().getHostAddress()+":"+tempPeer.getPeerSocket().getPort() +"] Protocol non respected by \""+tempPeer.getCredential().getUsername()+"\"!");
                 }
 
                 if(disconnect){

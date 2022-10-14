@@ -35,7 +35,7 @@ public class PeerHandler implements Runnable {
 
             try {
                 request = Serializer.receiveString(peer);
-                Logger.log("["+peer.getCredential().getUsername()+"] "+request);
+                Logger.log("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] "+peer.getCredential().getUsername()+": "+request);
             }catch (Exception e){
                 hasError = true;
                 throwable = e;
@@ -102,7 +102,7 @@ public class PeerHandler implements Runnable {
                                     Serializer.sendInt(peer, Defs.TeriaProtocols.OK);
                                     Serializer.sendString(peer, ItemIndexListHandler.getItemID(index).getItemID());
                                     Serializer.sendInt(peer, amount);
-                                    Logger.log("Decreased \""+peer.getCredential().getUsername()+"\" balance of "+finalCost+"TC");
+                                    Logger.log("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] Decreased \""+peer.getCredential().getUsername()+"\" balance of "+finalCost+"TC");
                                 }
                             }
                         }catch (IOException e){
@@ -130,14 +130,14 @@ public class PeerHandler implements Runnable {
                                         double itemValue = ItemIndexListHandler.getItemID(index).getValueTC();
                                         double finalValue = itemValue*amount;
                                         BalanceListHandler.getBalance(peer.getCredential()).setBalance(BalanceListHandler.getBalance(peer.getCredential()).getBalance()+finalValue);
-                                        Logger.log("Increased \""+peer.getCredential().getUsername()+"\" balance of "+finalValue+"TC");
+                                        Logger.log("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] Increased \""+peer.getCredential().getUsername()+"\" balance of "+finalValue+"TC");
                                         break;
 
                                     case Defs.TeriaProtocols.TeriaExchangeItemCodes.MISSING_REQUESTED_ITEM_AMOUT:
                                         break;
 
                                     default:
-                                        throw new InvalidProtocolException("Protocol not respected!");
+                                        throw new InvalidProtocolException("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] Protocol non respected by \""+peer.getCredential().getUsername()+"\"!");
 
                                 }
 
@@ -168,7 +168,7 @@ public class PeerHandler implements Runnable {
 
                     default:
                         hasError = true;
-                        throwable = new InvalidProtocolException("Protocol non respected!");
+                        throwable = new InvalidProtocolException("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] Protocol non respected by \""+peer.getCredential().getUsername()+"\"!");
                         break;
 
                 }
@@ -177,7 +177,7 @@ public class PeerHandler implements Runnable {
         }
 
         if(hasError){
-            Logger.log("Connection with peer terminated:\n"+ StringHandler.getStackTrace(throwable), new InfoFlags(true,false));
+            Logger.log("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] Connection with peer \""+peer.getCredential().getUsername()+"\" terminated:\n"+ StringHandler.getStackTrace(throwable), new InfoFlags(true,false));
         }
 
         PeerList.removePeer(peer);
