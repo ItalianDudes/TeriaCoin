@@ -2,6 +2,7 @@ package com.italiandudes.teriacoin.server.threads;
 
 import com.italianDudes.idl.common.*;
 import com.italiandudes.teriacoin.TeriaCoin.Defs;
+import com.italiandudes.teriacoin.common.Balance;
 import com.italiandudes.teriacoin.common.ItemDescriptor;
 import com.italiandudes.teriacoin.common.exception.socket.InvalidProtocolException;
 import com.italiandudes.teriacoin.server.lists.BalanceListHandler;
@@ -136,6 +137,9 @@ public class PeerHandler implements Runnable {
                                     case Defs.TeriaProtocols.TeriaExchangeItemCodes.MISSING_REQUESTED_ITEM_AMOUT:
                                         break;
 
+                                    case Defs.TeriaProtocols.TeriaExchangeItemCodes.ITEM_INDEX_NOT_FOUND:
+                                        break;
+
                                     default:
                                         throw new InvalidProtocolException("Protocol not respected!");
 
@@ -158,6 +162,51 @@ public class PeerHandler implements Runnable {
                                 Serializer.sendInt(peer, integer);
                                 Serializer.sendString(peer, buffer.getItemName());
                                 Serializer.sendDouble(peer, buffer.getValueTC());
+                            }
+
+                        }catch (IOException e){
+                            hasError = true;
+                            throwable = e;
+                        }
+                        break;
+
+                    case Defs.TeriaProtocols.TERIA_UNREGISTER:
+                        try {
+                            String password = Serializer.receiveString(peer);
+                            if(!password.equals(peer.getCredential().getPassword())){
+                                Serializer.sendInt(peer, Defs.TeriaProtocols.TeriaUnregisterCodes.PASSWORD_MISMATCH);
+                            }else{
+                                BalanceListHandler.unregisterBalance(peer.getCredential());
+                                Serializer.sendInt(peer, Defs.TeriaProtocols.OK);
+                                connectionClosed = true;
+                                Logger.log("Unregistered \""+peer.getCredential().getUsername()+"\"");
+                            }
+
+                        }catch (IOException e){
+                            hasError = true;
+                            throwable = e;
+                        }
+                        break;
+
+                    case Defs.TeriaProtocols.TERIA_CHANGE_PASSWORD:
+                        try{
+                            String password = Serializer.receiveString(peer);
+                            String newPassword = Serializer.receiveString(peer);
+                            String confirmNewPassword = Serializer.receiveString(peer);
+
+                            if(!password.equals(peer.getCredential().getPassword())){
+                                Serializer.sendInt(peer, Defs.TeriaProtocols.TeriaChangePasswordCodes.PASSWORD_MISMATCH);
+                            }else if(!newPassword.equals(confirmNewPassword)){
+                                Serializer.sendInt(peer, Defs.TeriaProtocols.TeriaChangePasswordCodes.NEW_PASSWORD_AND_CONFIRM_MISMATCH);
+                            }else if(!password.equals(newPassword)){
+                                Serializer.sendInt(peer, Defs.TeriaProtocols.TeriaChangePasswordCodes.OLD_AND_NEW_PASSWORD_ARE_EQUALS);
+                            }else{
+                                Balance userBalance = BalanceListHandler.getBalance(peer.getCredential());
+                                BalanceListHandler.unregisterBalance(peer.getCredential());
+                                BalanceListHandler.registerBalance(new Credential(peer.getCredential().getUsername(), newPassword, false), userBalance);
+                                Serializer.sendInt(peer, Defs.TeriaProtocols.OK);
+                                connectionClosed = true;
+                                Logger.log("\""+peer.getCredential().getUsername()+"\" has changed password, disconnecting...");
                             }
 
                         }catch (IOException e){

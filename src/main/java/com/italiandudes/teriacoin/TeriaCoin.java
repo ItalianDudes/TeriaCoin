@@ -92,6 +92,17 @@ public class TeriaCoin {
 
             public static final String TERIA_EXCHANGE_LIST = "EXCHANGE_LIST";
 
+            public static final String TERIA_UNREGISTER = "UNREGISTER";
+            public static final class TeriaUnregisterCodes {
+                public static final int PASSWORD_MISMATCH = -1;
+            }
+            public static final String TERIA_CHANGE_PASSWORD = "CHANGEPWD";
+            public static final class TeriaChangePasswordCodes {
+                public static final int OLD_AND_NEW_PASSWORD_ARE_EQUALS = -1;
+                public static final int NEW_PASSWORD_AND_CONFIRM_MISMATCH = -2;
+                public static final int PASSWORD_MISMATCH = -3;
+            }
+
         }
 
     }
