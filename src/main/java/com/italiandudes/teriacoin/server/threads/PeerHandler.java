@@ -179,7 +179,7 @@ public class PeerHandler implements Runnable {
                                 BalanceListHandler.unregisterBalance(peer.getCredential());
                                 Serializer.sendInt(peer, Defs.TeriaProtocols.OK);
                                 connectionClosed = true;
-                                Logger.log("Unregistered \""+peer.getCredential().getUsername()+"\"");
+                                Logger.log("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] Unregistered \""+peer.getCredential().getUsername()+"\"");
                             }
 
                         }catch (IOException e){
@@ -206,7 +206,7 @@ public class PeerHandler implements Runnable {
                                 BalanceListHandler.registerBalance(new Credential(peer.getCredential().getUsername(), newPassword, false), userBalance);
                                 Serializer.sendInt(peer, Defs.TeriaProtocols.OK);
                                 connectionClosed = true;
-                                Logger.log("\""+peer.getCredential().getUsername()+"\" has changed password, disconnecting...");
+                                Logger.log("["+ peer.getPeerSocket().getInetAddress().getHostAddress()+":"+peer.getPeerSocket().getPort() +"] \""+peer.getCredential().getUsername()+"\" has changed password, disconnecting...");
                             }
 
                         }catch (IOException e){
