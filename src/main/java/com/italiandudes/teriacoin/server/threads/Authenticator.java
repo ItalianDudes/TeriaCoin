@@ -6,6 +6,7 @@ import com.italianDudes.idl.common.Peer;
 import com.italianDudes.idl.common.Serializer;
 import com.italiandudes.teriacoin.TeriaCoin.Defs.TeriaProtocols;
 import com.italiandudes.teriacoin.common.exception.socket.InvalidProtocolException;
+import com.italiandudes.teriacoin.server.TeriaCoinServer;
 import com.italiandudes.teriacoin.server.lists.BalanceListHandler;
 import com.italiandudes.teriacoin.server.lists.PeerList;
 
@@ -33,6 +34,12 @@ public class Authenticator implements Runnable {
                 String protocol = Serializer.receiveString(tempPeer);
                 String username = Serializer.receiveString(tempPeer);
                 String password = Serializer.receiveString(tempPeer);
+                String clientVersion = Serializer.receiveString(tempPeer);
+
+                if (!TeriaCoinServer.getConfig().getValue(TeriaCoinServer.ServerDefs.KEY_CLIENT_VERSION).equals(clientVersion)) {
+                    Serializer.sendInt(tempPeer, TeriaProtocols.OUTDATED);
+                }
+
                 Credential credential = new Credential(username, password, false);
                 tempPeer = new Peer(connection, credential);
 

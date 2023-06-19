@@ -51,6 +51,7 @@ public class TeriaCoin {
 
             public static final int OK = 0;
             public static final int INVALID_PROTOCOL = -100;
+            public static final int OUTDATED = -500;
             public static final String TERIA_REGISTER = "REGISTER";
 
             public static final class TeriaRegisterCodes {

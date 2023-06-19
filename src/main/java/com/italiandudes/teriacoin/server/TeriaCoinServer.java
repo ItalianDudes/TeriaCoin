@@ -70,8 +70,10 @@ public final class TeriaCoinServer {
             public static final String SERVER_CONFIG_FILEPATH = SERVER_DIRECTORY_PATH+"config.cfg";
             //Keys
             public static final String KEY_PORT = "port";
+            public static final String KEY_CLIENT_VERSION = "clientversion";
             //Values
             public static final String VALUE_PORT = "25000";
+            public static final String VALUE_CLIENT_VERSION = "1.0R";
 
         //Return Values
         public static final int CANNOT_READ_SERVER_REGISTERED_BALANCES_FILE = 4514;

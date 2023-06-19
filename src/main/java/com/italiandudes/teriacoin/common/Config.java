@@ -92,6 +92,7 @@ public class Config {
     }
     public void setDefault(){
         configMap.add(new ConfigData(TeriaCoinServer.ServerDefs.KEY_PORT, TeriaCoinServer.ServerDefs.VALUE_PORT));
+        configMap.add(new ConfigData(TeriaCoinServer.ServerDefs.KEY_CLIENT_VERSION, TeriaCoinServer.ServerDefs.VALUE_CLIENT_VERSION));
     }
     public void dumpConfigs(){
         configMap.clear();
