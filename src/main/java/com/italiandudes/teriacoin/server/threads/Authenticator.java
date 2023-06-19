@@ -38,6 +38,9 @@ public class Authenticator implements Runnable {
 
                 if (!TeriaCoinServer.getConfig().getValue(TeriaCoinServer.ServerDefs.KEY_CLIENT_VERSION).equals(clientVersion)) {
                     Serializer.sendInt(tempPeer, TeriaProtocols.OUTDATED);
+                    Logger.log("["+tempPeer.getPeerSocket().getInetAddress().getHostAddress()+":"+tempPeer.getPeerSocket().getPort()+"] User that attempted to join as \"" + username + "\" has an outdated client, connection rejected!");
+                    tempPeer.getPeerSocket().close();
+                    return;
                 }
 
                 Credential credential = new Credential(username, password, false);
